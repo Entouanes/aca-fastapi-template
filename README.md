@@ -15,18 +15,29 @@ This project has [Dev Container support](https://code.visualstudio.com/docs/devc
 
 If you're not using one of those options for opening the project, then you'll need to:
 
-1. Create a [Python virtual environment](https://docs.python.org/3/tutorial/venv.html#creating-virtual-environments) and activate it.
+1. Install [uv](https://docs.astral.sh/uv/).
 
-2. Install the requirements:
+2. Create/update the virtual environment and install dependencies:
 
     ```shell
-    python3 -m pip install -r requirements-dev.txt
+    uv sync --extra dev
     ```
+
+    This creates a `.venv` directory. To activate it manually (optional, as `uv run` handles this automatically):
+
+    ```shell
+    source .venv/bin/activate  # On Linux/macOS
+    .venv\Scripts\activate     # On Windows
+    ```
+
+3. (Optional, recommended) Install the pre-commit hooks.
+
+   Pre-commit hooks are small checks (like formatting and linting) that automatically run when you `git commit`, so issues are caught early and CI stays clean.
 
 3. Install the pre-commit hooks:
 
     ```shell
-    pre-commit install
+    uv run pre-commit install
     ```
 
 ## Local development
@@ -34,7 +45,7 @@ If you're not using one of those options for opening the project, then you'll ne
 1. Run the local server:
 
     ```shell
-    fastapi dev src/api/main.py
+    uv run fastapi dev src/api/main.py
     ```
 
 2. Click 'http://127.0.0.1:8000' in the terminal, which should open a new tab in the browser.
@@ -50,7 +61,7 @@ You need to either have Docker Desktop installed or have this open in Github Cod
 1. Build the image:
 
     ```shell
-    docker build --tag fastapi-app ./src
+    docker build --tag fastapi-app --load ./src
     ```
 
 2. Run the image:
@@ -58,6 +69,16 @@ You need to either have Docker Desktop installed or have this open in Github Cod
     ```shell
     docker run --publish 3100:3100 fastapi-app
     ```
+
+### Running tests
+
+Run the test suite with pytest:
+
+```shell
+uv run pytest
+```
+
+This will run all tests in `src/api/` and `src/gunicorn_test.py` with coverage reporting. The project requires 100% test coverage.
 
 ### Deployment
 

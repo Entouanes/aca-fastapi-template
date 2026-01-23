@@ -3,3 +3,5 @@
 .azure
 __pycache__/
 .coverage
+*.egg-info/
+.eggs/
